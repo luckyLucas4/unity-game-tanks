@@ -82,20 +82,24 @@ public class GameManager : MonoBehaviour
         //Store all mine objects in an array
         m_MineObjects = GameObject.FindGameObjectsWithTag(m_MineTag);
 
-        m_MineLocations = new List<Transform>();
+        /*m_MineLocations = new List<Transform>();
 
         for(int i = 0; i < m_MineObjects.Length; i++)
         {
             m_MineLocations.Add(m_MineObjects[i].GetComponent<Transform>());
-        }
+        }*/
     }
 
     private void ReloadMines()
     {
-        foreach(Transform location in m_MineLocations)
+        for(int i = 0; i < m_MineObjects.Length; i++)
+        {
+            m_MineObjects[i].SetActive(true);
+        }
+        /*foreach(Transform location in m_MineLocations)
         {
             Rigidbody mineInstance = Instantiate(m_MinePrefab, location.position, location.rotation) as Rigidbody;
-        }
+        }*/
     }
 
 
@@ -164,7 +168,7 @@ public class GameManager : MonoBehaviour
     {
         for(int i = 0; i < m_MineObjects.Length; i++)
         {
-            Destroy(m_MineObjects[i]);
+            m_MineObjects[i].SetActive(false);
         }
         DisableTankControl();
 
