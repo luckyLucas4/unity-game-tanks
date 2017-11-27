@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -11,14 +12,16 @@ public class GameManager : MonoBehaviour
     public CameraControl m_CameraControl;   
     public Text m_MessageText;              
     public GameObject m_TankPrefab;         
-    public TankManager[] m_Tanks;           
-
+    public TankManager[] m_Tanks;
+    
 
     private int m_RoundNumber;              
     private WaitForSeconds m_StartWait;     
     private WaitForSeconds m_EndWait;       
     private TankManager m_RoundWinner;
-    private TankManager m_GameWinner;       
+    private TankManager m_GameWinner;
+    private string mineTag = "Mine";
+    private List<MineExplosion> mines; 
 
 
     private void Start()
@@ -30,6 +33,19 @@ public class GameManager : MonoBehaviour
         SetCameraTargets();
 
         StartCoroutine(GameLoop());
+
+        //Store all mine objects in an array
+        GameObject[] mineObjects;
+        mineObjects = GameObject.FindGameObjectsWithTag(mineTag);
+
+        //Create a list of MineExplosions and add them from the list of mineObjects
+        mines = new List<MineExplosion>();
+
+        for(int i = 0; i < mineObjects.Length; i++)
+        {
+            mines.Add(mineObjects[i].GetComponent<MineExplosion>());
+        }
+
     }
 
 
@@ -64,11 +80,24 @@ public class GameManager : MonoBehaviour
         yield return StartCoroutine(RoundPlaying());
         yield return StartCoroutine(RoundEnding());
 
+        //Check if there are exploding mines, if so come back later
+
+        foreach(MineExplosion mine in mines)
+        {
+            Debug.Log("Checking mine: " + mine.m_Exploding.ToString());
+            if (mine.m_Exploding)
+            {
+                Debug.Log("Found exploding mine");
+                yield return null;
+            }
+        }
+
+
         if (m_GameWinner != null)
         {
             SceneManager.LoadScene(0);
         }
-        else
+        else 
         {
             StartCoroutine(GameLoop());
         }

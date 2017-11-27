@@ -25,6 +25,11 @@ public class ShellExplosion : MonoBehaviour
 
         for(int i = 0; i < colliders.Length; i++)
         {
+            if(colliders[i].tag == "Mine")
+            {
+                colliders[i].GetComponent<MineExplosion>().Explode();
+            }
+
             Rigidbody targetRigidbody = colliders[i].GetComponent<Rigidbody>();
 
             if (!targetRigidbody)
