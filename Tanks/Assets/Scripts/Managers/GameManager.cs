@@ -10,8 +10,9 @@ public class GameManager : MonoBehaviour
     public float m_StartDelay = 3f;         
     public float m_EndDelay = 3f;           
     public CameraControl m_CameraControl;   
-    public Text m_MessageText;              
-    public GameObject m_TankPrefab;         
+    public Text m_MessageText;
+    public GameObject m_TankPrefab;
+    public Rigidbody m_MinePrefab;
     public TankManager[] m_Tanks;
     
 
@@ -20,8 +21,10 @@ public class GameManager : MonoBehaviour
     private WaitForSeconds m_EndWait;       
     private TankManager m_RoundWinner;
     private TankManager m_GameWinner;
-    private string mineTag = "Mine";
-    private List<MineExplosion> mines; 
+    private string m_MineTag = "Mine";
+    private List<MineExplosion> m_Mines;
+    private GameObject[] m_MineObjects;
+    private List<Transform> m_MineLocations;
 
 
     private void Start()
@@ -32,19 +35,19 @@ public class GameManager : MonoBehaviour
         SpawnAllTanks();
         SetCameraTargets();
 
+        SetupMines();
+
         StartCoroutine(GameLoop());
 
-        //Store all mine objects in an array
-        GameObject[] mineObjects;
-        mineObjects = GameObject.FindGameObjectsWithTag(mineTag);
+
 
         //Create a list of MineExplosions and add them from the list of mineObjects
-        mines = new List<MineExplosion>();
+        /*mines = new List<MineExplosion>();
 
         for(int i = 0; i < mineObjects.Length; i++)
         {
             mines.Add(mineObjects[i].GetComponent<MineExplosion>());
-        }
+        }*/
 
     }
 
@@ -74,23 +77,47 @@ public class GameManager : MonoBehaviour
     }
 
 
+    private void SetupMines()
+    {
+        //Store all mine objects in an array
+        m_MineObjects = GameObject.FindGameObjectsWithTag(m_MineTag);
+
+        m_MineLocations = new List<Transform>();
+
+        for(int i = 0; i < m_MineObjects.Length; i++)
+        {
+            m_MineLocations.Add(m_MineObjects[i].GetComponent<Transform>());
+        }
+    }
+
+    private void ReloadMines()
+    {
+        foreach(Transform location in m_MineLocations)
+        {
+            Rigidbody mineInstance = Instantiate(m_MinePrefab, location.position, location.rotation) as Rigidbody;
+        }
+    }
+
+
     private IEnumerator GameLoop()
     {
         yield return StartCoroutine(RoundStarting());
         yield return StartCoroutine(RoundPlaying());
         yield return StartCoroutine(RoundEnding());
 
-        //Check if there are exploding mines, if so come back later
 
-        foreach(MineExplosion mine in mines)
+        //(Check if there are exploding mines, if so come back later)/ Destroy all mines
+
+        /*foreach(MineExplosion mine in mines)
         {
+            Destroy(mine);
             Debug.Log("Checking mine: " + mine.m_Exploding.ToString());
-            if (mine.m_Exploding)
+            /*if (mine.m_Exploding)
             {
                 Debug.Log("Found exploding mine");
-                yield return null;
+                //yield return null;
             }
-        }
+        }*/
 
 
         if (m_GameWinner != null)
@@ -99,6 +126,7 @@ public class GameManager : MonoBehaviour
         }
         else 
         {
+            ReloadMines();
             StartCoroutine(GameLoop());
         }
     }
@@ -134,6 +162,10 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RoundEnding()
     {
+        for(int i = 0; i < m_MineObjects.Length; i++)
+        {
+            Destroy(m_MineObjects[i]);
+        }
         DisableTankControl();
 
         m_RoundWinner = null;
