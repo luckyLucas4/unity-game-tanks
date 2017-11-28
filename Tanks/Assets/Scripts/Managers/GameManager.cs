@@ -39,16 +39,6 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(GameLoop());
 
-
-
-        //Create a list of MineExplosions and add them from the list of mineObjects
-        /*mines = new List<MineExplosion>();
-
-        for(int i = 0; i < mineObjects.Length; i++)
-        {
-            mines.Add(mineObjects[i].GetComponent<MineExplosion>());
-        }*/
-
     }
 
 
@@ -82,12 +72,6 @@ public class GameManager : MonoBehaviour
         //Store all mine objects in an array
         m_MineObjects = GameObject.FindGameObjectsWithTag(m_MineTag);
 
-        /*m_MineLocations = new List<Transform>();
-
-        for(int i = 0; i < m_MineObjects.Length; i++)
-        {
-            m_MineLocations.Add(m_MineObjects[i].GetComponent<Transform>());
-        }*/
     }
 
     private void ReloadMines()
@@ -96,10 +80,6 @@ public class GameManager : MonoBehaviour
         {
             m_MineObjects[i].SetActive(true);
         }
-        /*foreach(Transform location in m_MineLocations)
-        {
-            Rigidbody mineInstance = Instantiate(m_MinePrefab, location.position, location.rotation) as Rigidbody;
-        }*/
     }
 
 
@@ -108,20 +88,6 @@ public class GameManager : MonoBehaviour
         yield return StartCoroutine(RoundStarting());
         yield return StartCoroutine(RoundPlaying());
         yield return StartCoroutine(RoundEnding());
-
-
-        //(Check if there are exploding mines, if so come back later)/ Destroy all mines
-
-        /*foreach(MineExplosion mine in mines)
-        {
-            Destroy(mine);
-            Debug.Log("Checking mine: " + mine.m_Exploding.ToString());
-            /*if (mine.m_Exploding)
-            {
-                Debug.Log("Found exploding mine");
-                //yield return null;
-            }
-        }*/
 
 
         if (m_GameWinner != null)
