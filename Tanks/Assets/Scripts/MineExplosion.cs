@@ -5,9 +5,8 @@ using UnityEngine;
 public class MineExplosion : MonoBehaviour {
 
     public Rigidbody m_Shell;
-    public float m_TimeToExplode, m_yPos, m_ExplosionHeight;
-    //public bool m_Exploding;
-    
+    public float m_TimeToExplode;
+    public bool m_Exploding;
     
     //Set to y level -0.24
 
@@ -15,8 +14,8 @@ public class MineExplosion : MonoBehaviour {
 
     private void Start()
     {
-        transform.position = new Vector3(transform.position.x, m_yPos, transform.position.z);
-        m_ExplosionPos = new Vector3(transform.position.x, m_ExplosionHeight, transform.position.z);
+        transform.position = new Vector3(transform.position.x, -0.24f, transform.position.z);
+        m_ExplosionPos = new Vector3(transform.position.x, 0.1f, transform.position.z);
 
     }
 
@@ -36,14 +35,14 @@ public class MineExplosion : MonoBehaviour {
 
     private IEnumerator ExplosionDelay()
     {
-        //m_Exploding = true;
+        m_Exploding = true;
 
         yield return new WaitForSeconds(m_TimeToExplode);
 
         Rigidbody shellInstance = Instantiate(m_Shell, m_ExplosionPos, transform.rotation) as Rigidbody;
 
-        gameObject.SetActive(false);
+        Destroy(gameObject);
 
-        //m_Exploding = false;
+        m_Exploding = false;
     }
 }
