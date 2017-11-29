@@ -73,22 +73,34 @@ public class GameManager : MonoBehaviour
         m_MineObjects = GameObject.FindGameObjectsWithTag(m_MineTag);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 00f1a54... Fixed mines exploding
         m_MineLocations = new List<Transform>();
 
         for(int i = 0; i < m_MineObjects.Length; i++)
         {
             m_MineLocations.Add(m_MineObjects[i].GetComponent<Transform>());
         }
+<<<<<<< HEAD
+>>>>>>> parent of 00f1a54... Fixed mines exploding
+=======
 >>>>>>> parent of 00f1a54... Fixed mines exploding
     }
 
     private void ReloadMines()
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
         for(int i = 0; i < m_MineObjects.Length; i++)
         {
             m_MineObjects[i].SetActive(true);
+=======
+        foreach(Transform location in m_MineLocations)
+        {
+            Rigidbody mineInstance = Instantiate(m_MinePrefab, location.position, location.rotation) as Rigidbody;
+>>>>>>> parent of 00f1a54... Fixed mines exploding
 =======
         foreach(Transform location in m_MineLocations)
         {
