@@ -6,16 +6,15 @@ public class MineExplosion : MonoBehaviour {
 
     public Rigidbody m_Shell;
     public float m_TimeToExplode, m_yPos, m_ExplosionHeight;
-    //public bool m_Exploding;
     
-    
-    //Set to y level -0.24
-
     private Vector3 m_ExplosionPos;
 
     private void Start()
     {
+        // Change y level to m_yPos
         transform.position = new Vector3(transform.position.x, m_yPos, transform.position.z);
+
+        // The explosion should be a little higher
         m_ExplosionPos = new Vector3(transform.position.x, m_ExplosionHeight, transform.position.z);
 
     }
@@ -23,7 +22,7 @@ public class MineExplosion : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
         //On tank enter: Instantiate shell
-        if (other.tag == "Object")
+        if (other.tag == "Object" || other.tag == "NPC")
         {
             Explode();
         }
@@ -36,14 +35,10 @@ public class MineExplosion : MonoBehaviour {
 
     private IEnumerator ExplosionDelay()
     {
-        //m_Exploding = true;
-
         yield return new WaitForSeconds(m_TimeToExplode);
 
         Rigidbody shellInstance = Instantiate(m_Shell, m_ExplosionPos, transform.rotation) as Rigidbody;
 
         gameObject.SetActive(false);
-
-        //m_Exploding = false;
     }
 }

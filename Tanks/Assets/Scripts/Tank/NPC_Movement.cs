@@ -10,7 +10,8 @@ public class NPC_Movement : MonoBehaviour {
     public AudioClip m_EngineIdling;
     public AudioClip m_EngineDriving;
     public float m_PitchRange = 0.2f;
-    public Transform[] m_PlayerPositions;
+    public int m_NumberOfPlayers = 2;
+    public List<Transform> m_PlayerTransforms = new List<Transform>();
 
 
     private Rigidbody m_Rigidbody;
@@ -28,8 +29,6 @@ public class NPC_Movement : MonoBehaviour {
     private void OnEnable()
     {
         m_Rigidbody.isKinematic = false;
-        m_MovementInputValue = 0f;
-        m_TurnInputValue = 0f;
     }
 
 
@@ -81,48 +80,59 @@ public class NPC_Movement : MonoBehaviour {
     {
         // Move and turn the tank.
 
-        Move();
         TurnToClosestPlayer();
+        Move();
 
     }
 
 
-    private float TurnToClosestPlayer()
+    private void TurnToClosestPlayer()
     {
-        float direction = 0f;
-
-        if(m_PlayerPositions.Length < 0)
+        //If there are tanks
+        if(m_PlayerTransforms.Count > 0)
         {
-            Vector3 originToClosestPlayer = transform.position - m_PlayerPositions[0].position;
+            // Setup values for the first player in list
+            Transform closestPlayer = m_PlayerTransforms[0];
+            Vector3 fromOriginToClosestPlayer = transform.position - closestPlayer.position;
 
-            float distanceToClosestPlayer = originToClosestPlayer.magnitude;
+            float distanceToClosestPlayer = fromOriginToClosestPlayer.magnitude;
 
-            for(int i = 1; i < m_PlayerPositions.Length; i++)
+            // For every player in the list
+            foreach(Transform playerTransform in m_PlayerTransforms)
             {
-                Vector3 originToPlayer = transform.position - m_PlayerPositions[i].position;
+                // A vector from the npc to the player
+                Vector3 fromOriginToPlayer = transform.position - playerTransform.position;
 
-                float distanceToPlayer = originToPlayer.magnitude;
+                // Length (magnitude) of the vector
+                float distanceToPlayer = fromOriginToPlayer.magnitude;
 
+                // If the length is the longer than the previous
                 if(distanceToPlayer < distanceToClosestPlayer)
                 {
-                    originToClosestPlayer = originToPlayer;
+                    // Setup values for newly found player
+                    fromOriginToClosestPlayer = fromOriginToPlayer;
                     distanceToClosestPlayer = distanceToPlayer;
+                    closestPlayer = playerTransform;
                 }
             }
-
-
+            // A new vector that is rotated from current forward direction to the direction of the closest player (inverted?)
+            // by an angle relative to m_TurnSpeed
+            Vector3 newDir = Vector3.RotateTowards(transform.forward, -fromOriginToClosestPlayer, 
+                m_TurnSpeed * Time.deltaTime, 0.0F);
+            // Set the vector as the quaternion that is the current rotation
+            transform.rotation = Quaternion.LookRotation(newDir);
         }
-
-        return direction;
     }
 
 
     private void Move()
     {
-        // Adjust the position of the tank based on the player's input.
+        // Adjust the position of the tank 
 
+        //A new vector that is extended from the forward direction
         Vector3 movement = transform.forward * m_MovementInputValue * m_Speed * Time.deltaTime;
 
+        //Move the tank to the end of the new vector by adding its values
         m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
 
     }
