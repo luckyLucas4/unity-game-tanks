@@ -11,16 +11,17 @@ public class GameManager : MonoBehaviour
     public float m_EndDelay = 3f;           
     public CameraControl m_CameraControl;   
     public Text m_MessageText;
-    public GameObject m_TankPrefab;
+    public GameObject m_TankPrefab, m_NPC_Prefab;
     public Rigidbody m_MinePrefab;
     public TankManager[] m_Tanks;
+    public NPC_Manager[] m_NPC_s;
     
 
     private int m_RoundNumber;              
     private WaitForSeconds m_StartWait, m_EndWait;          
     private TankManager m_RoundWinner, m_GameWinner;
     private List<MineExplosion> m_Mines;
-    private GameObject[] m_MineObjects, m_NPCs;
+    private GameObject[] m_MineObjects;
 
 
     private void Start()
@@ -30,8 +31,8 @@ public class GameManager : MonoBehaviour
 
         //Store all mine objects in an array
         m_MineObjects = GameObject.FindGameObjectsWithTag("Mine");
-        m_NPCs = GameObject.FindGameObjectsWithTag("NPC");
 
+        SpawnAllNPCs();
         SpawnAllTanks();
         SetCameraTargets();
 
@@ -50,13 +51,23 @@ public class GameManager : MonoBehaviour
             m_Tanks[i].Setup();
 
             //Add player transforms to all NPCs
-            for (int j = 0; j < m_NPCs.Length; j++)
+            for (int j = 0; j < m_NPC_s.Length; j++)
             {
-                m_NPCs[j].GetComponent<NPC_Movement>().m_PlayerTransforms.Add(m_Tanks[i].m_Instance.transform);
+                m_NPC_s[j].m_Instance.GetComponent<NPC_Movement>().m_PlayerTransforms.Add(m_Tanks[i].m_Instance.transform);
             }
         }
     }
 
+    private void SpawnAllNPCs()
+    {
+        for (int i = 0; i < m_NPC_s.Length; i++)
+        {
+            m_NPC_s[i].m_Instance =
+                Instantiate(m_NPC_Prefab, m_NPC_s[i].m_SpawnPoint.position, m_NPC_s[i].m_SpawnPoint.rotation) as GameObject;
+            m_NPC_s[i].m_NPC_Number = i + 1;
+            m_NPC_s[i].Setup();
+        }
+    }
 
     private void SetCameraTargets()
     {
@@ -102,7 +113,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator RoundStarting()
     {
         ResetAllTanks();
-        ResetNPCs();
+        ResetAllNPCs();
         DisableTankControl();
 
         m_CameraControl.SetStartPositionAndSize();
@@ -209,6 +220,13 @@ public class GameManager : MonoBehaviour
         return message;
     }
 
+    private void ResetAllNPCs()
+    {
+        for(int i = 0; i < m_NPC_s.Length; i++)
+        {
+            m_NPC_s[i].Reset(); 
+        }
+    }
 
     private void ResetAllTanks()
     {
@@ -217,7 +235,6 @@ public class GameManager : MonoBehaviour
             m_Tanks[i].Reset();
         }
     }
-
 
     private void EnableTankControl()
     {
@@ -236,11 +253,4 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void ResetNPCs()
-    {
-        for(int i = 0; i < m_NPCs.Length; i++)
-        {
-            m_NPCs[i].SetActive(true); 
-        }
-    }
 }
