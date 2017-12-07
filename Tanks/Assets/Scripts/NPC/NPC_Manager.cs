@@ -27,10 +27,10 @@ public class NPC_Manager{
 
     public void Reset()
     {
+        Debug.Log("Resetting NPC" + m_NPC_Number + " to: " + m_SpawnPoint.position);
         m_Instance.transform.position = m_SpawnPoint.position;
         m_Instance.transform.rotation = m_SpawnPoint.rotation;
 
-        m_Instance.SetActive(false);
-        m_Instance.SetActive(true);
+        m_Instance.GetComponent<NPC_Health>().m_Dead = false;
     }
 }

@@ -131,6 +131,15 @@ public class GameManager : MonoBehaviour
 
         m_MessageText.text = string.Empty;
 
+        for(int i = 0; i < m_NPC_s.Length; i++)
+        {
+            Debug.Log("NPC" + i + " dead: " + m_NPC_s[i].m_Instance.GetComponent<NPC_Health>().m_Dead);
+            if (m_NPC_s[i].m_Instance.GetComponent<NPC_Health>().m_Dead)
+            {
+                m_NPC_s[i].Reset();
+            }
+        }
+
         while (!OneTankLeft())
         {
             yield return null;
@@ -172,7 +181,15 @@ public class GameManager : MonoBehaviour
                 numTanksLeft++;
         }
 
-        return numTanksLeft <= 1;
+        if (m_Tanks.Length <= 1)
+        {
+            return numTanksLeft <= 0;
+        }
+        else
+        {
+            return numTanksLeft <= 1;
+        }
+
     }
 
 

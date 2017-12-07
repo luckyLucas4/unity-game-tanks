@@ -9,7 +9,7 @@ public class NPC_Health : MonoBehaviour
     public Color m_FullHealthColor = Color.green;
     public Color m_ZeroHealthColor = Color.red;
     public GameObject m_ExplosionPrefab;
-    [HideInInspector] public bool m_Dead;
+    [HideInInspector] public bool m_Dead = false;
     [HideInInspector] public float m_CurrentHealth;
 
 
@@ -75,6 +75,7 @@ public class NPC_Health : MonoBehaviour
         m_ExplosionAudio.Play();
 
         gameObject.SetActive(false);
+        
 
         Debug.Log("Dead!");
     }
