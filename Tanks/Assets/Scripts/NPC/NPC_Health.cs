@@ -62,7 +62,7 @@ public class NPC_Health : MonoBehaviour
     }
 
 
-    private void OnDeath()
+    public void OnDeath()
     {
         // Play the effects for the death of the tank and deactivate it.
 
@@ -73,10 +73,7 @@ public class NPC_Health : MonoBehaviour
 
         m_ExplosionParticles.Play();
         m_ExplosionAudio.Play();
-
-        gameObject.SetActive(false);
         
-
         Debug.Log("Dead!");
     }
 }

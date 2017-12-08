@@ -133,8 +133,9 @@ public class GameManager : MonoBehaviour
 
         for(int i = 0; i < m_NPC_s.Length; i++)
         {
-            Debug.Log("NPC" + i + " dead: " + m_NPC_s[i].m_Instance.GetComponent<NPC_Health>().m_Dead);
-            if (m_NPC_s[i].m_Instance.GetComponent<NPC_Health>().m_Dead)
+            bool dead = m_NPC_s[i].m_Instance.GetComponent<NPC_Health>().m_Dead;
+            Debug.Log("NPC" + i + " dead: " + dead);
+            if (dead)
             {
                 m_NPC_s[i].Reset();
             }

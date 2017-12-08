@@ -13,7 +13,7 @@ public class NPC_Explosion : MonoBehaviour {
         {
             Rigidbody shellInstance = Instantiate(m_Shell, transform.position, transform.rotation) as Rigidbody;
 
-            GetComponent<NPC_Health>().m_Dead = true;
+            GetComponent<NPC_Health>().OnDeath();
 
             Debug.Log("Dead: " + GetComponent<NPC_Health>().m_Dead);
 
