@@ -11,12 +11,9 @@ public class NPC_Manager{
     [HideInInspector] public int m_NPC_Number;
     [HideInInspector] public GameObject m_Instance;
 
-    //private GameObject m_CanvasGameObject;
 
     public void Setup()
     {
-        //m_CanvasGameObject = m_Instance.GetComponentInChildren<Canvas>().gameObject;
-
         MeshRenderer[] renderers = m_Instance.GetComponentsInChildren<MeshRenderer>();
 
         for (int i = 0; i < renderers.Length; i++)
@@ -27,10 +24,11 @@ public class NPC_Manager{
 
     public void Reset()
     {
-
+        //Teleport to spawnpoint
         m_Instance.transform.position = m_SpawnPoint.position;
         m_Instance.transform.rotation = m_SpawnPoint.rotation;
 
+        //Animate the explosion and play audio
         NPC_Health healthScript = m_Instance.GetComponent<NPC_Health>();
 
         healthScript.m_ExplosionParticles.transform.position = m_Instance.transform.position;
@@ -39,6 +37,7 @@ public class NPC_Manager{
         healthScript.m_ExplosionParticles.Play();
         healthScript.m_ExplosionAudio.Play();
 
+        //Reset the tank to remove all forces (isKinematic is triggered in the NPC_Movement script)
         m_Instance.SetActive(false);
         m_Instance.SetActive(true);
 

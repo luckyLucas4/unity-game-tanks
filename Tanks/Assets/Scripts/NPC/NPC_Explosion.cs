@@ -8,14 +8,21 @@ public class NPC_Explosion : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        
+        //Explode if colliding with object or NPC
         if ((other.tag == "Object" || other.tag == "NPC") && !GetComponent<NPC_Health>().m_Dead)
         {
-            Rigidbody shellInstance = Instantiate(m_Shell, transform.position, transform.rotation) as Rigidbody;
-
-            GetComponent<NPC_Health>().OnDeath();
-
+            Explode();
         }
+    }
+
+    public void Explode()
+    {
+        //Spawn a shell at the NPCs location
+        Rigidbody shellInstance = Instantiate(m_Shell, transform.position, transform.rotation) as Rigidbody;
+
+        //Trigger the OnDeath function in the NPC_Health script
+        GetComponent<NPC_Health>().OnDeath();
+
     }
 }
 

@@ -11,7 +11,6 @@ public class NPC_Movement : MonoBehaviour {
 
 
     private Rigidbody m_Rigidbody;
-    private float m_MovementInputValue = 1f;
 
 
     private void Awake()
@@ -83,14 +82,11 @@ public class NPC_Movement : MonoBehaviour {
 
     private void Move()
     {
-        // Adjust the position of the tank 
-
         //A new vector that is extended from the forward direction
-        Vector3 movement = transform.forward * m_MovementInputValue * m_Speed * Time.deltaTime;
+        Vector3 movement = transform.forward * m_Speed * Time.deltaTime;
 
         //Move the tank to the end of the new vector by adding its values
         m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
 
     }
-
 }

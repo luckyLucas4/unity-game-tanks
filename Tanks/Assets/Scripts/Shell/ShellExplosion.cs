@@ -19,19 +19,25 @@ public class ShellExplosion : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //The shell will always collide with the boundary box
         if(other.tag == "Boundary")
         {
             return;
         }
 
-        // Find all the tanks in an area around the shell and damage them.
+        // Find all the objects in an area around the shell and damage them.
         Collider[] colliders = Physics.OverlapSphere(transform.position, m_ExplosionRadius, m_TankMask);
 
         for (int i = 0; i < colliders.Length; i++)
         {
+            //Mines and NPCs have their own explode functions
             if (colliders[i].tag == "Mine")
             {
                 colliders[i].GetComponent<MineExplosion>().Explode();
+            }
+            else if(colliders[i].tag == "NPC")
+            {
+                colliders[i].GetComponent<NPC_Explosion>().Explode();
             }
 
             Rigidbody targetRigidbody = colliders[i].GetComponent<Rigidbody>();
