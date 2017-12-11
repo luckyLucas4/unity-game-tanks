@@ -15,8 +15,6 @@ public class NPC_Explosion : MonoBehaviour {
 
             GetComponent<NPC_Health>().OnDeath();
 
-            Debug.Log("Dead: " + GetComponent<NPC_Health>().m_Dead);
-
         }
     }
 }

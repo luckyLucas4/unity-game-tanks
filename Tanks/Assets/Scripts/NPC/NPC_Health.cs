@@ -9,12 +9,11 @@ public class NPC_Health : MonoBehaviour
     public Color m_FullHealthColor = Color.green;
     public Color m_ZeroHealthColor = Color.red;
     public GameObject m_ExplosionPrefab;
+
     [HideInInspector] public bool m_Dead = false;
     [HideInInspector] public float m_CurrentHealth;
-
-
-    private AudioSource m_ExplosionAudio;
-    private ParticleSystem m_ExplosionParticles;
+    [HideInInspector] public AudioSource m_ExplosionAudio;
+    [HideInInspector] public ParticleSystem m_ExplosionParticles;
 
 
     private void Awake()
@@ -73,7 +72,7 @@ public class NPC_Health : MonoBehaviour
 
         m_ExplosionParticles.Play();
         m_ExplosionAudio.Play();
-        
-        Debug.Log("Dead!");
+
+        gameObject.SetActive(false);
     }
 }

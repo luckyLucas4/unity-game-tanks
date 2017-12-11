@@ -131,23 +131,30 @@ public class GameManager : MonoBehaviour
 
         m_MessageText.text = string.Empty;
 
-        for(int i = 0; i < m_NPC_s.Length; i++)
-        {
-            bool dead = m_NPC_s[i].m_Instance.GetComponent<NPC_Health>().m_Dead;
-            Debug.Log("NPC" + i + " dead: " + dead);
-            if (dead)
-            {
-                m_NPC_s[i].Reset();
-            }
-        }
 
         while (!OneTankLeft())
         {
+            for(int i = 0; i < m_NPC_s.Length; i++)
+            {
+                bool dead = m_NPC_s[i].m_Instance.GetComponent<NPC_Health>().m_Dead;
+                if (dead)
+                {
+                    StartCoroutine(DelayedReset(i));
+
+                    m_NPC_s[i].m_Instance.GetComponent<NPC_Health>().m_Dead = false;
+                }
+            }
             yield return null;
         }
 
     }
 
+    private IEnumerator DelayedReset(int playerNumber)
+    {
+        yield return new WaitForSeconds(3f);
+
+        m_NPC_s[playerNumber].Reset();
+    }
 
     private IEnumerator RoundEnding()
     {
