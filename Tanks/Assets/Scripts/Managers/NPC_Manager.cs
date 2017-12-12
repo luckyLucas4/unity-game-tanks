@@ -8,6 +8,7 @@ public class NPC_Manager{
 
     public Color m_Color;
     public Transform m_SpawnPoint;
+    public float m_Speed;
     [HideInInspector] public int m_NPC_Number;
     [HideInInspector] public GameObject m_Instance;
 
@@ -15,6 +16,8 @@ public class NPC_Manager{
     public void Setup()
     {
         MeshRenderer[] renderers = m_Instance.GetComponentsInChildren<MeshRenderer>();
+
+        m_Instance.GetComponent<NPC_Movement>().m_Speed = m_Speed;
 
         for (int i = 0; i < renderers.Length; i++)
         {
