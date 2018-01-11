@@ -172,6 +172,8 @@ public class GameManager : MonoBehaviour
 
         m_GameWinner = GetGameWinner();
 
+        ChangeTankPositions();
+
         string message = EndMessage();
         m_MessageText.text = message;
 
@@ -212,6 +214,16 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+    private void ChangeTankPositions()
+    {
+        Transform firstTankSpawn = m_Tanks[0].m_SpawnPoint;
+
+        for(int i = 1; i < m_Tanks.Length; i++)
+        {
+            m_Tanks[i-1].m_SpawnPoint = m_Tanks[i].m_SpawnPoint;
+            m_Tanks[i].m_SpawnPoint = firstTankSpawn;
+        }
+    }
 
     private TankManager GetGameWinner()
     {
